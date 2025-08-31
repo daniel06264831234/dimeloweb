@@ -1,3 +1,4 @@
+
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
@@ -156,6 +157,15 @@ button[type="submit"]:hover, #imgBtn:hover, #emojiBtn:hover {
     border-radius: 8px;
     box-shadow: 0 1px 4px #bbb;
     margin-top: 4px;
+}
+.chat-img, #messages img {
+    display: block;
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px #bbb;
+    margin-top: 6px;
+    margin-bottom: 2px;
 }
 #roomSelect {
     max-width: 420px;
@@ -419,8 +429,12 @@ button[type="submit"]:hover, #imgBtn:hover, #emojiBtn:hover {
         max-width: 96vw !important;
     }
     #messages img {
-        max-width: 80vw;
-        max-height: 140px;
+        max-width: 90vw;
+        max-height: 160px;
+    }
+    .chat-img, #messages img {
+        max-width: 90vw;
+        max-height: 160px;
     }
     #roomList {
         font-size: 1.08rem;
@@ -457,5 +471,9 @@ button[type="submit"]:hover, #imgBtn:hover, #emojiBtn:hover {
     }
     .form-section {
         padding: 6px 2vw 3px 2vw;
+    }
+    .chat-img, #messages img {
+        max-width: 98vw;
+        max-height: 120px;
     }
 }
