@@ -100,8 +100,9 @@ socket.on('message', function(msg) {
     if (!currentRoom) return;
     const item = document.createElement('div');
     if (msg.type === 'image') {
-        if (msg.user === username) item.className = 'me';
-        item.innerHTML = `<strong>${msg.user === username ? 'Yo' : msg.user}:</strong><br><img src="${msg.data}" style="max-width:180px;max-height:180px;border-radius:8px;box-shadow:0 1px 4px #bbb;">`;
+        // Siempre muestra la imagen, sea quien sea el usuario
+        item.className = (msg.user === username) ? 'me' : '';
+        item.innerHTML = `<strong>${msg.user === username ? 'Yo' : msg.user}:</strong><br><img src="${msg.data}" alt="imagen" class="chat-img">`;
     } else if (msg.user === 'Sistema') {
         item.className = 'system';
         item.textContent = msg.text;
