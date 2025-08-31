@@ -4,7 +4,7 @@ const chatDiv = document.getElementById('chat');
 const messages = document.getElementById('messages');
 const form = document.getElementById('form');
 const input = document.getElementById('input');
-const imageInput = document.getElementById('imageInput');
+let imageInput = document.getElementById('imageInput'); // Cambia de const a let
 const imgBtn = document.getElementById('imgBtn');
 const emojiBtn = document.getElementById('emojiBtn');
 const emojiPicker = document.getElementById('emojiPicker');
@@ -125,29 +125,35 @@ form.addEventListener('submit', function(e) {
 });
 
 imgBtn.onclick = () => {
-    if (currentRoom) imageInput.click();
+    if (currentRoom) {
+        // Siempre recupera el input actual por si fue reemplazado
+        imageInput = document.getElementById('imageInput');
+        imageInput.click();
+    }
 };
 
-imageInput.onchange = function() {
-    if (!currentRoom) return;
-    const file = imageInput.files && imageInput.files[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        socket.emit('chat image', e.target.result);
-        // Limpia el input después de enviar la imagen (mejor para móviles)
-        setTimeout(() => {
-            imageInput.value = '';
-            // Para máxima compatibilidad móvil, reemplaza el input por uno nuevo
-            const newInput = imageInput.cloneNode();
-            imageInput.parentNode.replaceChild(newInput, imageInput);
-            newInput.onchange = imageInput.onchange;
-            imageInput = newInput;
-        }, 300);
+function resetImageInputHandler() {
+    imageInput = document.getElementById('imageInput');
+    imageInput.onchange = function() {
+        if (!currentRoom) return;
+        const file = imageInput.files && imageInput.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            socket.emit('chat image', e.target.result);
+            setTimeout(() => {
+                // Reemplaza el input para máxima compatibilidad móvil
+                const newInput = imageInput.cloneNode();
+                imageInput.parentNode.replaceChild(newInput, imageInput);
+                imageInput = newInput;
+                resetImageInputHandler();
+            }, 300);
+        };
+        reader.readAsDataURL(file);
     };
-    reader.readAsDataURL(file);
-};
+}
+resetImageInputHandler();
 
 function updateRoomList() {
     socket.emit('get rooms', (rooms) => {
@@ -233,3 +239,4 @@ socket.on('room closed', function() {
     messages.innerHTML = '';
     usersDiv.innerHTML = '';
 });
+
