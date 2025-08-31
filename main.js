@@ -1,3 +1,4 @@
+
 const socket = io('https://dimelo-kvvj.onrender.com', { transports: ['websocket', 'polling'] });
 
 const chatDiv = document.getElementById('chat');
@@ -215,3 +216,12 @@ socket.on('connect', () => {
 });
 
 socket.emit('get users in room');
+
+socket.on('room closed', function() {
+    alert('La sala se cerró por inactividad.');
+    chatDiv.style.display = 'none';
+    roomSelect.style.display = '';
+    currentRoom = '';
+    messages.innerHTML = '';
+    usersDiv.innerHTML = '';
+});
