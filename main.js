@@ -1,4 +1,3 @@
-
 const socket = io('https://dimelo-kvvj.onrender.com', { transports: ['websocket', 'polling'] });
 
 const chatDiv = document.getElementById('chat');
@@ -131,15 +130,23 @@ imgBtn.onclick = () => {
 
 imageInput.onchange = function() {
     if (!currentRoom) return;
-    const file = imageInput.files[0];
+    const file = imageInput.files && imageInput.files[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) return;
     const reader = new FileReader();
     reader.onload = function(e) {
         socket.emit('chat image', e.target.result);
+        // Limpia el input después de enviar la imagen (mejor para móviles)
+        setTimeout(() => {
+            imageInput.value = '';
+            // Para máxima compatibilidad móvil, reemplaza el input por uno nuevo
+            const newInput = imageInput.cloneNode();
+            imageInput.parentNode.replaceChild(newInput, imageInput);
+            newInput.onchange = imageInput.onchange;
+            imageInput = newInput;
+        }, 300);
     };
     reader.readAsDataURL(file);
-    setTimeout(() => { imageInput.value = ''; }, 500);
 };
 
 function updateRoomList() {
